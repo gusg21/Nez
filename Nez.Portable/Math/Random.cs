@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 
@@ -217,6 +218,14 @@ namespace Nez
 				default:
 					return fourth;
 			}
+		}
+
+		public static T ChooseFromList<T>(List<T> list)
+		{
+			if (list.Count > 0)
+				return list[NextInt(list.Count)];
+
+			return default;
 		}
 	}
 }
