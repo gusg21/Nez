@@ -1,6 +1,8 @@
 # Angus' Changes
 
-Forked Nez for an upcoming project with @TREFETHEN
+Forked Nez for an upcoming project with [TREFETHEN](https://github.com/enwyn-rosethorne)
+
+https://czarnicholas.itch.io/
 
 * Random.ChooseFromList\<T>
 	* choose an item from a list of items
