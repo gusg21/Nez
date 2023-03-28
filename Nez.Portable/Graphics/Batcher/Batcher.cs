@@ -264,6 +264,17 @@ namespace Nez
 
 		#region Public draw methods
 
+		/** SPRITE DRAWING **/
+
+		public void Draw(Sprite sprite, Vector2 position)
+		{
+			CheckBegin();
+			PushSprite(sprite, null, position.X, position.Y, 1.0f, 1.0f,
+				Color.White, Vector2.Zero, 0.0f, 0.0f, 0, false, 0, 0, 0, 0);
+		}
+
+		/** TEXTURE DRAWING **/
+
 		public void Draw(Texture2D texture, Vector2 position)
 		{
 			CheckBegin();
@@ -851,6 +862,12 @@ namespace Nez
 			// out of space, flush
 			if (_numSprites >= MAX_SPRITES)
 				FlushBatch();
+
+			if (!_shouldIgnoreRoundingDestinations && ShouldRoundDestinations)
+			{
+				destinationX = Mathf.Round(destinationX);
+				destinationY = Mathf.Round(destinationY);
+			}
 
 			// Source/Destination/Origin Calculations. destinationW/H is the scale value so we multiply by the size of the texture region
 			var originX = (origin.X / sprite.Uvs.Width) / sprite.Texture2D.Width;

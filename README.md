@@ -1,3 +1,16 @@
+# Angus' Changes
+
+Forked Nez for an upcoming project with [TREFETHEN](https://github.com/enwyn-rosethorne)
+
+https://czarnicholas.itch.io/
+
+* Random.ChooseFromList\<T>
+	* choose an item from a list of items
+* VirtualButton.AddAnyKeyboardKey
+	* adds every key to a VirtualButton (simulating the "any key")
+
+---
+
 ![Nez](Nez.github.io/static/img/logo.svg)
 
 [![Build status](https://ci.appveyor.com/api/projects/status/github/prime31/Nez?branch=master&svg=true)](https://ci.appveyor.com/project/prime31/nez/branch/master)

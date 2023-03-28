@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Input;
 
@@ -167,6 +168,17 @@ namespace Nez
 			return this;
 		}
 
+		/// <summary>
+		/// adds an "any key" by adding every possible key to this button. possibly more efficient ways to do it.
+		/// </summary>
+		/// <returns></returns>
+		public VirtualButton AddAnyKeyboardKey()
+		{
+			foreach (Keys key in Enum.GetValues(typeof(Keys)))
+				AddKeyboardKey(key);
+
+			return this;
+		}
 
 		/// <summary>
 		/// adds a keyboard key with modifier to this VirtualButton. modifier must be in the down state for isPressed/isDown to be true.
