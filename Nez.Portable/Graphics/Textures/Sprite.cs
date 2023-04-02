@@ -21,6 +21,17 @@ namespace Nez.Textures
 		public readonly Rectangle SourceRect;
 
 		/// <summary>
+		/// Get the Width of the source rect for this sprite.
+		/// </summary>
+		public int Width => SourceRect.Width;
+
+		/// <summary>
+		/// Get the Height of the source rect for this sprite.
+		/// </summary>
+		public int Height => SourceRect.Height;
+
+
+		/// <summary>
 		/// UVs for the texture region
 		/// </summary>
 		public readonly RectangleF Uvs;
