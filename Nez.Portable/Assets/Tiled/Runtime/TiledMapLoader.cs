@@ -6,6 +6,7 @@ using System.Linq;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Nez.Assets.Tiled.TiledTypes;
 
 namespace Nez.Tiled
 {
@@ -75,7 +76,7 @@ namespace Nez.Tiled
 		private static void UpdateMaxTileSizes(TmxTileset tileset)
 		{
 			// we have to iterate the dictionary because tile.gid (the key) could be any number in any order
-			foreach(var kvPair in tileset.Tiles)
+			foreach (var kvPair in tileset.Tiles)
 			{
 				var tile = kvPair.Value;
 				if (tile.Image != null)
@@ -85,11 +86,11 @@ namespace Nez.Tiled
 				}
 			}
 
-			foreach(var kvPair in tileset.TileRegions)
+			foreach (var kvPair in tileset.TileRegions)
 			{
 				var region = kvPair.Value;
-				var width = (int) region.Width;
-				var height = (int) region.Height;
+				var width = (int)region.Width;
+				var height = (int)region.Height;
 				if (width > tileset.Map.MaxTileWidth) tileset.Map.MaxTileWidth = width;
 				if (width > tileset.Map.MaxTileHeight) tileset.Map.MaxTileHeight = height;
 			}
@@ -410,13 +411,30 @@ namespace Nez.Tiled
 		{
 			obj.Id = (int?)xObject.Attribute("id") ?? 0;
 			obj.Name = (string)xObject.Attribute("name") ?? string.Empty;
-			obj.X = (float)xObject.Attribute("x");
-			obj.Y = (float)xObject.Attribute("y");
+			obj.TemplateFile = (string)xObject.Attribute("template") ?? string.Empty;
+			if (xObject.Attribute("x") != null)
+				obj.X = (float)xObject.Attribute("x");
+			if (xObject.Attribute("y") != null)
+				obj.Y = (float)xObject.Attribute("y");
 			obj.Width = (float?)xObject.Attribute("width") ?? 0.0f;
 			obj.Height = (float?)xObject.Attribute("height") ?? 0.0f;
 			obj.Type = (string)xObject.Attribute("type") ?? (string)xObject.Attribute("class") ?? string.Empty;
 			obj.Visible = (bool?)xObject.Attribute("visible") ?? true;
 			obj.Rotation = (float?)xObject.Attribute("rotation") ?? 0.0f;
+
+			if (!string.IsNullOrEmpty(obj.TemplateFile))
+			{
+				using (var stream = TitleContainer.OpenStream(map.TmxDirectory + Path.DirectorySeparatorChar + obj.TemplateFile))
+				{
+					var xDoc = XDocument.Load(stream);
+					obj.Template = new TmxTemplate().LoadTmxTemplate(map, xDoc.Element("template"));
+				}
+
+				if (string.IsNullOrEmpty(obj.Type)) // Propagate object type from template
+				{
+					obj.Type = obj.Template.Type;
+				}
+			}
 
 			// Assess object type and assign appropriate content
 			var xGid = xObject.Attribute("gid");
@@ -462,6 +480,17 @@ namespace Nez.Tiled
 			obj.Properties = ParsePropertyDict(xObject.Element("properties"));
 
 			return obj;
+		}
+
+		public static TmxTemplate LoadTmxTemplate(this TmxTemplate template, TmxMap map, XElement xTemplate)
+		{
+			XElement xObj = xTemplate.Element("object");
+			template.Map = map;
+			template.Name = (string)xObj.Attribute("type") ?? string.Empty;
+			template.Type = (string)xObj.Attribute("type") ?? string.Empty;
+			template.Object = new TmxObject().LoadTmxObject(map, xObj);
+
+			return template;
 		}
 
 		public static TmxText LoadTmxText(this TmxText text, XElement xText)
