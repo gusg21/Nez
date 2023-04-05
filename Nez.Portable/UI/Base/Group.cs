@@ -165,6 +165,8 @@ namespace Nez.UI
 
 		public void DrawChildren(Batcher batcher, float parentAlpha)
 		{
+			Debug.Log(color.A);
+
 			parentAlpha *= color.A / 255.0f;
 
 			if (_cullingArea.HasValue)
