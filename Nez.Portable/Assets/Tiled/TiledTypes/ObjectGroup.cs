@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Nez.Assets.Tiled.TiledTypes;
 
 namespace Nez.Tiled
 {
@@ -27,6 +28,8 @@ namespace Nez.Tiled
 		public int Id;
 		public string Name { get; set; }
 		public TmxObjectType ObjectType;
+		public string TemplateFile;
+		public TmxTemplate Template;
 		public string Type;
 		public float X;
 		public float Y;
