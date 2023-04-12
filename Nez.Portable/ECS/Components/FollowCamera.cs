@@ -91,7 +91,8 @@ namespace Nez
 			if (Camera == null)
 				Camera = Entity.Scene.Camera;
 
-			Follow(_targetEntity, _cameraStyle);
+			if (_targetEntity != null)
+				Follow(_targetEntity, _cameraStyle);
 
 			// listen for changes in screen size so we can keep our deadzone properly positioned
 			Core.Emitter.AddObserver(CoreEvents.GraphicsDeviceReset, OnGraphicsDeviceReset);
@@ -104,6 +105,8 @@ namespace Nez
 
 		public virtual void Update()
 		{
+			//Debug.Log($"Follow Cam Update, target: {_targetEntity}");
+
 			// calculate the current deadzone around the camera
 			// Camera.Position is the center of the camera view
 			if (_deadzoneMeasurement == Measurement.FixedPixel)
@@ -215,6 +218,8 @@ namespace Nez
 
 		public void Follow(Entity targetEntity, CameraStyle cameraStyle = CameraStyle.CameraWindow, Measurement deadzoneMeasurement = Measurement.ScaledCameraBounds)
 		{
+			Insist.IsNotNull(targetEntity);
+
 			_targetEntity = targetEntity;
 			_cameraStyle = cameraStyle;
 			

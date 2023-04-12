@@ -269,6 +269,10 @@ namespace Nez
 			_scale = _localScale = Vector2.One;
 		}
 
+		public void AddChild(Transform transform)
+		{
+			transform.SetParent(this);
+		}
 
 		/// <summary>
 		/// returns the Transform child at index

@@ -153,7 +153,10 @@ namespace Nez
 
 			// force a validate which will layout the ScrollPane and populate the proper scrollBarWidth
 			_scrollPane.Validate();
-			_scrollPane.SetSize(295 + _scrollPane.GetScrollBarWidth(), Screen.Height);
+			_scrollPane.SetSize(400 + _scrollPane.GetScrollBarWidth(), Screen.Height);
+
+			// Add a title
+			_table.Add(new Label("INSPECTOR"));
 		}
 
 

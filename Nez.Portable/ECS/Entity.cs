@@ -318,6 +318,32 @@ namespace Nez
 		}
 
 		/// <summary>
+		/// A shorthand sugar version of SetParent but with entities
+		/// </summary>
+		/// <param name="entity">entity to add</param>
+		public void AddChild(Entity entity) => Transform.AddChild(entity.Transform);
+
+		/// <summary>
+		/// Calls AddChild() for each Entity
+		/// </summary>
+		/// <param name="entities">entities to add</param>
+		public void AddChildren(params Entity[] entities)
+		{
+			foreach (Entity entity in entities)
+				AddChild(entity);
+		}
+
+		/// <summary>
+		/// Calls AddChild() for each Entity
+		/// </summary>
+		/// <param name="entities">entities to add</param>
+		public void AddChildren(List<Entity> entities)
+		{
+			foreach (Entity entity in entities)
+				AddChild(entity);
+		}
+
+		/// <summary>
 		/// creates a deep clone of this Entity. Subclasses can override this method to copy any custom fields. When overriding,
 		/// the CopyFrom method should be called which will clone all Components, Colliders and Transform children for you. Note
 		/// that the cloned Entity will not be added to any Scene! You must add them yourself!

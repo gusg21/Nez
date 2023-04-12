@@ -59,6 +59,17 @@ namespace Nez
 				LayerIndicesToRender[i] = TiledMap.Layers.IndexOf(TiledMap.GetLayer(layerNames[i]));
 		}
 
+		public void SetLayersToNotRender(params string[] layerNames)
+		{
+			List<int> tempLayers = new List<int>();
+
+			foreach (ITmxLayer tiledMapLayer in TiledMap.Layers)
+				if (!layerNames.Contains(tiledMapLayer.Name))
+					tempLayers.Add(TiledMap.Layers.IndexOf(tiledMapLayer));
+
+			LayerIndicesToRender = tempLayers.ToArray();
+		}
+
 
 		#region TiledMap queries
 

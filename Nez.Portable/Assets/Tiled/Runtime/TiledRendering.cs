@@ -73,7 +73,7 @@ namespace Nez.Tiled
 				if (tile == null)
 					continue;
 
-				RenderTile(tile, batcher, position,
+				RenderTile(tile, batcher, position, new Vector2(tile.Tileset.TileOffset.X, tile.Tileset.TileOffset.Y),
 					scale, tileWidth, tileHeight,
 					color, layerDepth, layer.Map.Orientation,
 					layer.Map.Width, layer.Map.Height);
@@ -116,7 +116,7 @@ namespace Nez.Tiled
 				{
 					var tile = layer.GetTile(x, y);
 					if (tile != null)
-						RenderTile(tile, batcher, position,
+						RenderTile(tile, batcher, position, new Vector2(tile.Tileset.TileOffset.X, tile.Tileset.TileOffset.Y),
 							scale, tileWidth, tileHeight,
 							color, layerDepth, layer.Map.Orientation,
 							layer.Map.Width, layer.Map.Height);
@@ -178,7 +178,7 @@ namespace Nez.Tiled
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static void RenderTile(TmxLayerTile tile, Batcher batcher, Vector2 position,
+		public static void RenderTile(TmxLayerTile tile, Batcher batcher, Vector2 position, Vector2 tileOffset,
 				Vector2 scale, float tileWidth, float tileHeight,
 				Color color, float layerDepth, OrientationType orientation,
 				int mapWidth, int mapHeight)
@@ -276,9 +276,9 @@ namespace Nez.Tiled
 			var pos = new Vector2(tx, ty) + position;
 
 			if (tile.Tileset.Image != null)
-				batcher.Draw(tile.Tileset.Image.Texture, pos, sourceRect, color, rotation, Vector2.Zero, scale, spriteEffects, layerDepth);
+				batcher.Draw(tile.Tileset.Image.Texture, pos + tileOffset, sourceRect, color, rotation, Vector2.Zero, scale, spriteEffects, layerDepth);
 			else
-				batcher.Draw(tilesetTile.Image.Texture, pos, sourceRect, color, rotation, Vector2.Zero, scale, spriteEffects, layerDepth);
+				batcher.Draw(tilesetTile.Image.Texture, pos + tileOffset, sourceRect, color, rotation, Vector2.Zero, scale, spriteEffects, layerDepth);
 		}
 
 		public static void RenderObjectGroup(TmxObjectGroup objGroup, Batcher batcher, Vector2 position, Vector2 scale, float layerDepth)

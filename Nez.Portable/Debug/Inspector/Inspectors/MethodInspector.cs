@@ -1,6 +1,7 @@
 ﻿using Nez.UI;
 using System;
 using System.Reflection;
+using Microsoft.Xna.Framework;
 
 
 #if DEBUG
@@ -18,22 +19,19 @@ namespace Nez
 			if (parameters.Length == 0)
 				return true;
 
-			if (parameters.Length > 1)
+			bool valid = true;
+			foreach (ParameterInfo parameter in parameters)
 			{
+				var paramType = parameters[0].ParameterType;
+				if (paramType == typeof(int) || paramType == typeof(float) || paramType == typeof(string) ||
+				    paramType == typeof(bool)) continue;
+
+				valid = false;
 				Debug.Warn(
-					$"method {parameters[0].Member.Name} has InspectorCallableAttribute but it has more than 1 parameter");
-				return false;
+					$"method {parameters[0].Member.Name} has InspectorCallableAttribute but it has an invalid parameter type {paramType}");
 			}
 
-			var paramType = parameters[0].ParameterType;
-			if (paramType == typeof(int) || paramType == typeof(float) || paramType == typeof(string) ||
-				paramType == typeof(bool))
-				return true;
-
-			Debug.Warn(
-				$"method {parameters[0].Member.Name} has InspectorCallableAttribute but it has an invalid paraemter type {paramType}");
-
-			return false;
+			return valid;
 		}
 
 
@@ -42,34 +40,43 @@ namespace Nez
 			var button = new TextButton(_name, skin);
 			button.OnClicked += OnButtonClicked;
 			button.OnRightClicked += OnButtonClicked;
-
-			// we could have zero or 1 param
-			var parameters = (_memberInfo as MethodInfo).GetParameters();
-			if (parameters.Length == 0)
-			{
-				table.Add(button);
-				return;
-			}
-
-			var parameter = parameters[0];
-			_parameterType = parameter.ParameterType;
-
-			_textField =
-				new TextField(
-					_parameterType.GetTypeInfo().IsValueType ? Activator.CreateInstance(_parameterType).ToString() : "",
-					skin);
-			_textField.ShouldIgnoreTextUpdatesWhileFocused = false;
-
-			// add a filter for float/int
-			if (_parameterType == typeof(float))
-				_textField.SetTextFieldFilter(new FloatFilter());
-			if (_parameterType == typeof(int))
-				_textField.SetTextFieldFilter(new DigitsOnlyFilter());
-			if (_parameterType == typeof(bool))
-				_textField.SetTextFieldFilter(new BoolFilter());
-
 			table.Add(button);
-			table.Add(_textField).SetMaxWidth(70);
+
+			var paramTable = new Table();
+			paramTable.SetBackground(new PrimitiveDrawable(Color.DarkSlateGray));
+			table.Row();
+			table.Add(paramTable);
+
+			var parameters = (_memberInfo as MethodInfo).GetParameters();
+			if (parameters.Length > 0)
+				AddParameterFields(paramTable, skin, parameters);
+		}
+
+		private void AddParameterFields(Table table, Skin skin, ParameterInfo[] parameters)
+		{
+			foreach (ParameterInfo parameter in parameters)
+			{
+				_parameterType = parameter.ParameterType;
+
+				_textField =
+					new TextField(
+						_parameterType.GetTypeInfo().IsValueType ? Activator.CreateInstance(_parameterType).ToString() : "",
+						skin);
+				_textField.ShouldIgnoreTextUpdatesWhileFocused = false;
+
+				// add a filter for float/int
+				if (_parameterType == typeof(float))
+					_textField.SetTextFieldFilter(new FloatFilter());
+				if (_parameterType == typeof(int))
+					_textField.SetTextFieldFilter(new DigitsOnlyFilter());
+				if (_parameterType == typeof(bool))
+					_textField.SetTextFieldFilter(new BoolFilter());
+
+
+				table.Row();
+				table.Add(new Label(parameter.Name));
+				table.Add(_textField).SetMaxWidth(70);
+			}
 		}
 
 
